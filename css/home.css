@@ -1,0 +1,362 @@
+/* ===== الصفحة الرئيسية — اختبارات القرآن الكريم ===== */
+/* نفس لغة تصميم صفحات الاختبار: أندلسي (فيروزي/ذهبي/كريمي) */
+
+.home-body{
+  min-height:100vh;
+  display:block;
+  padding:22px 14px 40px;
+}
+
+.app{max-width:980px;}
+
+/* ترويسة */
+.arch-header{padding:26px 20px 28px;}
+.arch-header .bismillah{
+  font-size:1.05rem;
+  color:var(--gold);
+  opacity:0.9;
+  margin-bottom:8px;
+}
+.arch-header h1{
+  font-size:1.9rem;
+  letter-spacing:0.5px;
+}
+.arch-header .subtitle{
+  margin-top:8px;
+  font-size:1rem;
+  color:var(--gold);
+  opacity:0.85;
+  line-height:1.8;
+}
+
+/* شريط الإحصاءات */
+.stats-row{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  padding:16px 20px 0;
+}
+.stat-box{
+  background:#fff;
+  border:2px solid var(--gold);
+  border-radius:12px;
+  text-align:center;
+  padding:10px 6px 12px;
+  box-shadow:inset 0 0 0 3px rgba(201,163,78,0.1);
+}
+.stat-box .num{
+  font-family:'Reem Kufi',sans-serif;
+  font-size:1.5rem;
+  color:var(--teal-dark);
+  font-weight:700;
+  line-height:1.2;
+}
+.stat-box .lbl{
+  font-size:0.8rem;
+  color:var(--terracotta);
+  font-family:'Reem Kufi',sans-serif;
+}
+
+/* أدوات البحث والفلترة */
+.toolbar{
+  padding:16px 20px 4px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center;
+}
+.search-wrap{
+  flex:1 1 240px;
+  position:relative;
+}
+.search-wrap input{
+  width:100%;
+  padding:11px 42px 11px 14px;
+  border-radius:999px;
+  border:2px solid var(--gold);
+  background:#fff;
+  font-family:'Amiri',serif;
+  font-size:1.05rem;
+  color:var(--teal-dark);
+}
+.search-wrap input:focus{outline:none;border-color:var(--terracotta);}
+.search-wrap .search-ico{
+  position:absolute;
+  right:14px;top:50%;
+  transform:translateY(-50%);
+  color:var(--gold);
+  font-size:1.1rem;
+  pointer-events:none;
+}
+.chips{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+.chip{
+  font-family:'Reem Kufi',sans-serif;
+  font-size:0.88rem;
+  padding:7px 16px;
+  border-radius:999px;
+  border:2px solid rgba(13,77,74,0.3);
+  background:#fff;
+  color:var(--teal-dark);
+  cursor:pointer;
+  transition:all .2s ease;
+}
+.chip:hover{border-color:var(--gold);}
+.chip.active{
+  background:linear-gradient(180deg,var(--teal),var(--teal-dark));
+  color:var(--gold-light);
+  border-color:var(--gold);
+}
+.juz-select{
+  font-family:'Reem Kufi',sans-serif;
+  font-size:0.9rem;
+  padding:9px 12px;
+  border-radius:999px;
+  border:2px solid rgba(13,77,74,0.3);
+  background:#fff;
+  color:var(--teal-dark);
+  cursor:pointer;
+}
+
+/* قسم المجموعات */
+.section-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:20px 22px 10px;
+  font-family:'Reem Kufi',sans-serif;
+  font-size:1.15rem;
+  color:var(--teal-dark);
+}
+.section-title::after{
+  content:"";
+  flex:1;
+  height:2px;
+  background:linear-gradient(90deg,var(--gold),transparent);
+  border-radius:2px;
+}
+.groups-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:12px;
+  padding:0 20px;
+}
+.group-card{
+  background:#fff;
+  border:2px solid var(--gold);
+  border-radius:14px;
+  padding:14px 16px;
+  cursor:pointer;
+  transition:all .2s ease;
+  position:relative;
+  overflow:hidden;
+}
+.group-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(7,51,49,0.15);}
+.group-card .g-title{
+  font-family:'Reem Kufi',sans-serif;
+  font-size:1.02rem;
+  color:var(--teal-dark);
+  margin-bottom:6px;
+}
+.group-card .g-meta{
+  font-size:0.85rem;
+  color:var(--terracotta);
+  margin-bottom:8px;
+}
+.group-card .g-desc{
+  font-size:0.88rem;
+  color:var(--ink);
+  line-height:1.8;
+  opacity:0.85;
+}
+.group-card .g-progress{
+  margin-top:10px;
+  font-size:0.8rem;
+  font-family:'Reem Kufi',sans-serif;
+  color:var(--teal);
+}
+
+/* قائمة السور */
+.surah-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(290px,1fr));
+  gap:12px;
+  padding:0 20px;
+}
+.surah-card{
+  background:linear-gradient(180deg,#fff,#fffdf5);
+  border:2px solid rgba(201,163,78,0.6);
+  border-radius:14px;
+  overflow:hidden;
+  transition:all .2s ease;
+  cursor:pointer;
+}
+.surah-card:hover{border-color:var(--gold);box-shadow:0 8px 20px rgba(7,51,49,0.12);}
+.surah-card.open{border-color:var(--teal);box-shadow:0 8px 24px rgba(7,51,49,0.18);}
+.surah-head{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px 14px;
+}
+.surah-num{
+  flex:0 0 auto;
+  width:44px;height:44px;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#fdf7ea,#f6ecd9);
+  border:2px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Reem Kufi',sans-serif;
+  font-size:1.05rem;
+  color:var(--teal-dark);
+  font-weight:700;
+  position:relative;
+}
+.surah-num::after{
+  content:"";
+  position:absolute;
+  inset:-4px;
+  border-radius:50%;
+  border:1px dashed rgba(201,163,78,0.5);
+}
+.surah-info{flex:1;min-width:0;}
+.surah-name{
+  font-size:1.25rem;
+  font-weight:700;
+  color:var(--teal-dark);
+  line-height:1.4;
+}
+.surah-meta{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:2px;
+  font-size:0.78rem;
+  font-family:'Reem Kufi',sans-serif;
+}
+.tag{
+  padding:1px 9px;
+  border-radius:999px;
+  border:1px solid rgba(13,77,74,0.25);
+  color:var(--teal);
+}
+.tag.cat-long{border-color:var(--terracotta);color:var(--terracotta);}
+.tag.cat-mid{border-color:#b08a2e;color:#8a6d1f;}
+.tag.cat-short{border-color:#2f8f4e;color:#2f8f4e;}
+.tag.cat-makki{background:#fdf3ec;color:#a04b1f;border-color:rgba(160,75,31,0.35);}
+.tag.cat-madani{background:#eef5f4;color:#0d4d4a;border-color:rgba(13,77,74,0.35);}
+.surah-progress{
+  flex:0 0 auto;
+  text-align:center;
+  font-family:'Reem Kufi',sans-serif;
+  font-size:0.75rem;
+  color:var(--teal);
+}
+.surah-progress .bar{
+  width:52px;height:7px;
+  border-radius:999px;
+  background:rgba(13,77,74,0.12);
+  overflow:hidden;
+  margin-top:4px;
+}
+.surah-progress .fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--gold),var(--terracotta));
+  border-radius:999px;
+  transition:width .3s ease;
+}
+.surah-quizzes{
+  display:none;
+  border-top:1px dashed rgba(201,163,78,0.6);
+  background:rgba(246,236,217,0.35);
+  padding:10px 12px;
+}
+.surah-card.open .surah-quizzes{display:block;}
+.quiz-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:#fff;
+  border:1.5px solid rgba(13,77,74,0.18);
+  border-radius:10px;
+  padding:9px 12px;
+  margin-bottom:7px;
+  transition:all .15s ease;
+}
+.quiz-row:hover{border-color:var(--gold);background:#fffdf5;}
+.quiz-row .q-info{flex:1;min-width:0;}
+.quiz-row .q-title{
+  font-size:0.95rem;
+  color:var(--teal-dark);
+  font-weight:700;
+  line-height:1.6;
+}
+.quiz-row .q-sub{
+  font-size:0.76rem;
+  color:var(--terracotta);
+  font-family:'Reem Kufi',sans-serif;
+  margin-top:1px;
+}
+.quiz-row .q-btn{
+  flex:0 0 auto;
+  font-family:'Reem Kufi',sans-serif;
+  font-size:0.85rem;
+  padding:7px 18px;
+  border-radius:999px;
+  border:2px solid var(--gold);
+  background:linear-gradient(180deg,var(--teal),var(--teal-dark));
+  color:var(--gold-light);
+  cursor:pointer;
+  transition:all .2s ease;
+  white-space:nowrap;
+}
+.quiz-row .q-btn:hover{background:linear-gradient(180deg,var(--terracotta),#8f3e29);}
+.quiz-row .q-btn.done{
+  background:linear-gradient(180deg,#2f8f4e,#1e6b3a);
+  border-color:#2f8f4e;
+}
+.q-best{
+  font-size:0.72rem;
+  color:#1e6b3a;
+  font-family:'Reem Kufi',sans-serif;
+}
+.empty-state{
+  padding:34px 20px;
+  text-align:center;
+  color:var(--teal);
+  font-family:'Reem Kufi',sans-serif;
+  opacity:0.7;
+}
+
+/* تذييل الصفحة الرئيسية */
+.home-footer{
+  margin-top:26px;
+  text-align:center;
+  background:linear-gradient(180deg,var(--teal-dark),#062725);
+  border:3px solid var(--gold);
+  border-radius:18px;
+  padding:16px 20px 18px;
+  color:var(--gold-light);
+}
+.home-footer .src-note{
+  font-size:0.8rem;
+  color:rgba(246,236,217,0.75);
+  margin-top:8px;
+  line-height:1.9;
+}
+.home-footer .src-note a{color:var(--gold);text-decoration:none;}
+
+@media (max-width:600px){
+  .home-body{padding:12px 8px 30px;}
+  .stats-row{grid-template-columns:repeat(2,1fr);padding:12px 12px 0;}
+  .toolbar{padding:12px 12px 4px;}
+  .groups-grid,.surah-grid{grid-template-columns:1fr;padding:0 12px;}
+  .arch-header h1{font-size:1.4rem;}
+  .arch-header .subtitle{font-size:0.88rem;}
+  .section-title{padding:16px 14px 8px;}
+  .quiz-row{flex-wrap:wrap;}
+  .quiz-row .q-btn{width:100%;text-align:center;}
+}

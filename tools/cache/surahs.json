@@ -1,0 +1,686 @@
+[
+ {
+  "n": 1,
+  "name": "الفاتحة",
+  "ayahs": 7,
+  "revelation": "مكية"
+ },
+ {
+  "n": 2,
+  "name": "البقرة",
+  "ayahs": 286,
+  "revelation": "مدنية"
+ },
+ {
+  "n": 3,
+  "name": "آل عمران",
+  "ayahs": 200,
+  "revelation": "مدنية"
+ },
+ {
+  "n": 4,
+  "name": "النساء",
+  "ayahs": 176,
+  "revelation": "مدنية"
+ },
+ {
+  "n": 5,
+  "name": "المائدة",
+  "ayahs": 120,
+  "revelation": "مدنية"
+ },
+ {
+  "n": 6,
+  "name": "الأنعام",
+  "ayahs": 165,
+  "revelation": "مكية"
+ },
+ {
+  "n": 7,
+  "name": "الأعراف",
+  "ayahs": 206,
+  "revelation": "مكية"
+ },
+ {
+  "n": 8,
+  "name": "الأنفال",
+  "ayahs": 75,
+  "revelation": "مدنية"
+ },
+ {
+  "n": 9,
+  "name": "التوبة",
+  "ayahs": 129,
+  "revelation": "مدنية"
+ },
+ {
+  "n": 10,
+  "name": "يونس",
+  "ayahs": 109,
+  "revelation": "مكية"
+ },
+ {
+  "n": 11,
+  "name": "هود",
+  "ayahs": 123,
+  "revelation": "مكية"
+ },
+ {
+  "n": 12,
+  "name": "يوسف",
+  "ayahs": 111,
+  "revelation": "مكية"
+ },
+ {
+  "n": 13,
+  "name": "الرعد",
+  "ayahs": 43,
+  "revelation": "مدنية"
+ },
+ {
+  "n": 14,
+  "name": "إبراهيم",
+  "ayahs": 52,
+  "revelation": "مكية"
+ },
+ {
+  "n": 15,
+  "name": "الحجر",
+  "ayahs": 99,
+  "revelation": "مكية"
+ },
+ {
+  "n": 16,
+  "name": "النحل",
+  "ayahs": 128,
+  "revelation": "مكية"
+ },
+ {
+  "n": 17,
+  "name": "الإسراء",
+  "ayahs": 111,
+  "revelation": "مكية"
+ },
+ {
+  "n": 18,
+  "name": "الكهف",
+  "ayahs": 110,
+  "revelation": "مكية"
+ },
+ {
+  "n": 19,
+  "name": "مريم",
+  "ayahs": 98,
+  "revelation": "مكية"
+ },
+ {
+  "n": 20,
+  "name": "طه",
+  "ayahs": 135,
+  "revelation": "مكية"
+ },
+ {
+  "n": 21,
+  "name": "الأنبياء",
+  "ayahs": 112,
+  "revelation": "مكية"
+ },
+ {
+  "n": 22,
+  "name": "الحج",
+  "ayahs": 78,
+  "revelation": "مدنية"
+ },
+ {
+  "n": 23,
+  "name": "المؤمنون",
+  "ayahs": 118,
+  "revelation": "مكية"
+ },
+ {
+  "n": 24,
+  "name": "النور",
+  "ayahs": 64,
+  "revelation": "مدنية"
+ },
+ {
+  "n": 25,
+  "name": "الفرقان",
+  "ayahs": 77,
+  "revelation": "مكية"
+ },
+ {
+  "n": 26,
+  "name": "الشعراء",
+  "ayahs": 227,
+  "revelation": "مكية"
+ },
+ {
+  "n": 27,
+  "name": "النمل",
+  "ayahs": 93,
+  "revelation": "مكية"
+ },
+ {
+  "n": 28,
+  "name": "القصص",
+  "ayahs": 88,
+  "revelation": "مكية"
+ },
+ {
+  "n": 29,
+  "name": "العنكبوت",
+  "ayahs": 69,
+  "revelation": "مكية"
+ },
+ {
+  "n": 30,
+  "name": "الروم",
+  "ayahs": 60,
+  "revelation": "مكية"
+ },
+ {
+  "n": 31,
+  "name": "لقمان",
+  "ayahs": 34,
+  "revelation": "مكية"
+ },
+ {
+  "n": 32,
+  "name": "السجدة",
+  "ayahs": 30,
+  "revelation": "مكية"
+ },
+ {
+  "n": 33,
+  "name": "الأحزاب",
+  "ayahs": 73,
+  "revelation": "مدنية"
+ },
+ {
+  "n": 34,
+  "name": "سبأ",
+  "ayahs": 54,
+  "revelation": "مكية"
+ },
+ {
+  "n": 35,
+  "name": "فاطر",
+  "ayahs": 45,
+  "revelation": "مكية"
+ },
+ {
+  "n": 36,
+  "name": "يس",
+  "ayahs": 83,
+  "revelation": "مكية"
+ },
+ {
+  "n": 37,
+  "name": "الصافات",
+  "ayahs": 182,
+  "revelation": "مكية"
+ },
+ {
+  "n": 38,
+  "name": "ص",
+  "ayahs": 88,
+  "revelation": "مكية"
+ },
+ {
+  "n": 39,
+  "name": "الزمر",
+  "ayahs": 75,
+  "revelation": "مكية"
+ },
+ {
+  "n": 40,
+  "name": "غافر",
+  "ayahs": 85,
+  "revelation": "مكية"
+ },
+ {
+  "n": 41,
+  "name": "فصلت",
+  "ayahs": 54,
+  "revelation": "مكية"
+ },
+ {
+  "n": 42,
+  "name": "الشورى",
+  "ayahs": 53,
+  "revelation": "مكية"
+ },
+ {
+  "n": 43,
+  "name": "الزخرف",
+  "ayahs": 89,
+  "revelation": "مكية"
+ },
+ {
+  "n": 44,
+  "name": "الدخان",
+  "ayahs": 59,
+  "revelation": "مكية"
+ },
+ {
+  "n": 45,
+  "name": "الجاثية",
+  "ayahs": 37,
+  "revelation": "مكية"
+ },
+ {
+  "n": 46,
+  "name": "الأحقاف",
+  "ayahs": 35,
+  "revelation": "مكية"
+ },
+ {
+  "n": 47,
+  "name": "محمد",
+  "ayahs": 38,
+  "revelation": "مدنية"
+ },
+ {
+  "n": 48,
+  "name": "الفتح",
+  "ayahs": 29,
+  "revelation": "مدنية"
+ },
+ {
+  "n": 49,
+  "name": "الحجرات",
+  "ayahs": 18,
+  "revelation": "مدنية"
+ },
+ {
+  "n": 50,
+  "name": "ق",
+  "ayahs": 45,
+  "revelation": "مكية"
+ },
+ {
+  "n": 51,
+  "name": "الذاريات",
+  "ayahs": 60,
+  "revelation": "مكية"
+ },
+ {
+  "n": 52,
+  "name": "الطور",
+  "ayahs": 49,
+  "revelation": "مكية"
+ },
+ {
+  "n": 53,
+  "name": "النجم",
+  "ayahs": 62,
+  "revelation": "مكية"
+ },
+ {
+  "n": 54,
+  "name": "القمر",
+  "ayahs": 55,
+  "revelation": "مكية"
+ },
+ {
+  "n": 55,
+  "name": "الرحمن",
+  "ayahs": 78,
+  "revelation": "مدنية"
+ },
+ {
+  "n": 56,
+  "name": "الواقعة",
+  "ayahs": 96,
+  "revelation": "مكية"
+ },
+ {
+  "n": 57,
+  "name": "الحديد",
+  "ayahs": 29,
+  "revelation": "مدنية"
+ },
+ {
+  "n": 58,
+  "name": "المجادلة",
+  "ayahs": 22,
+  "revelation": "مدنية"
+ },
+ {
+  "n": 59,
+  "name": "الحشر",
+  "ayahs": 24,
+  "revelation": "مدنية"
+ },
+ {
+  "n": 60,
+  "name": "الممتحنة",
+  "ayahs": 13,
+  "revelation": "مدنية"
+ },
+ {
+  "n": 61,
+  "name": "الصف",
+  "ayahs": 14,
+  "revelation": "مدنية"
+ },
+ {
+  "n": 62,
+  "name": "الجمعة",
+  "ayahs": 11,
+  "revelation": "مدنية"
+ },
+ {
+  "n": 63,
+  "name": "المنافقون",
+  "ayahs": 11,
+  "revelation": "مدنية"
+ },
+ {
+  "n": 64,
+  "name": "التغابن",
+  "ayahs": 18,
+  "revelation": "مدنية"
+ },
+ {
+  "n": 65,
+  "name": "الطلاق",
+  "ayahs": 12,
+  "revelation": "مدنية"
+ },
+ {
+  "n": 66,
+  "name": "التحريم",
+  "ayahs": 12,
+  "revelation": "مدنية"
+ },
+ {
+  "n": 67,
+  "name": "الملك",
+  "ayahs": 30,
+  "revelation": "مكية"
+ },
+ {
+  "n": 68,
+  "name": "القلم",
+  "ayahs": 52,
+  "revelation": "مكية"
+ },
+ {
+  "n": 69,
+  "name": "الحاقة",
+  "ayahs": 52,
+  "revelation": "مكية"
+ },
+ {
+  "n": 70,
+  "name": "المعارج",
+  "ayahs": 44,
+  "revelation": "مكية"
+ },
+ {
+  "n": 71,
+  "name": "نوح",
+  "ayahs": 28,
+  "revelation": "مكية"
+ },
+ {
+  "n": 72,
+  "name": "الجن",
+  "ayahs": 28,
+  "revelation": "مكية"
+ },
+ {
+  "n": 73,
+  "name": "المزمل",
+  "ayahs": 20,
+  "revelation": "مكية"
+ },
+ {
+  "n": 74,
+  "name": "المدثر",
+  "ayahs": 56,
+  "revelation": "مكية"
+ },
+ {
+  "n": 75,
+  "name": "القيامة",
+  "ayahs": 40,
+  "revelation": "مكية"
+ },
+ {
+  "n": 76,
+  "name": "الإنسان",
+  "ayahs": 31,
+  "revelation": "مدنية"
+ },
+ {
+  "n": 77,
+  "name": "المرسلات",
+  "ayahs": 50,
+  "revelation": "مكية"
+ },
+ {
+  "n": 78,
+  "name": "النبأ",
+  "ayahs": 40,
+  "revelation": "مكية"
+ },
+ {
+  "n": 79,
+  "name": "النازعات",
+  "ayahs": 46,
+  "revelation": "مكية"
+ },
+ {
+  "n": 80,
+  "name": "عبس",
+  "ayahs": 42,
+  "revelation": "مكية"
+ },
+ {
+  "n": 81,
+  "name": "التكوير",
+  "ayahs": 29,
+  "revelation": "مكية"
+ },
+ {
+  "n": 82,
+  "name": "الانفطار",
+  "ayahs": 19,
+  "revelation": "مكية"
+ },
+ {
+  "n": 83,
+  "name": "المطففين",
+  "ayahs": 36,
+  "revelation": "مكية"
+ },
+ {
+  "n": 84,
+  "name": "الانشقاق",
+  "ayahs": 25,
+  "revelation": "مكية"
+ },
+ {
+  "n": 85,
+  "name": "البروج",
+  "ayahs": 22,
+  "revelation": "مكية"
+ },
+ {
+  "n": 86,
+  "name": "الطارق",
+  "ayahs": 17,
+  "revelation": "مكية"
+ },
+ {
+  "n": 87,
+  "name": "الأعلى",
+  "ayahs": 19,
+  "revelation": "مكية"
+ },
+ {
+  "n": 88,
+  "name": "الغاشية",
+  "ayahs": 26,
+  "revelation": "مكية"
+ },
+ {
+  "n": 89,
+  "name": "الفجر",
+  "ayahs": 30,
+  "revelation": "مكية"
+ },
+ {
+  "n": 90,
+  "name": "البلد",
+  "ayahs": 20,
+  "revelation": "مكية"
+ },
+ {
+  "n": 91,
+  "name": "الشمس",
+  "ayahs": 15,
+  "revelation": "مكية"
+ },
+ {
+  "n": 92,
+  "name": "الليل",
+  "ayahs": 21,
+  "revelation": "مكية"
+ },
+ {
+  "n": 93,
+  "name": "الضحى",
+  "ayahs": 11,
+  "revelation": "مكية"
+ },
+ {
+  "n": 94,
+  "name": "الشرح",
+  "ayahs": 8,
+  "revelation": "مكية"
+ },
+ {
+  "n": 95,
+  "name": "التين",
+  "ayahs": 8,
+  "revelation": "مكية"
+ },
+ {
+  "n": 96,
+  "name": "العلق",
+  "ayahs": 19,
+  "revelation": "مكية"
+ },
+ {
+  "n": 97,
+  "name": "القدر",
+  "ayahs": 5,
+  "revelation": "مكية"
+ },
+ {
+  "n": 98,
+  "name": "البينة",
+  "ayahs": 8,
+  "revelation": "مدنية"
+ },
+ {
+  "n": 99,
+  "name": "الزلزلة",
+  "ayahs": 8,
+  "revelation": "مدنية"
+ },
+ {
+  "n": 100,
+  "name": "العاديات",
+  "ayahs": 11,
+  "revelation": "مكية"
+ },
+ {
+  "n": 101,
+  "name": "القارعة",
+  "ayahs": 11,
+  "revelation": "مكية"
+ },
+ {
+  "n": 102,
+  "name": "التكاثر",
+  "ayahs": 8,
+  "revelation": "مكية"
+ },
+ {
+  "n": 103,
+  "name": "العصر",
+  "ayahs": 3,
+  "revelation": "مكية"
+ },
+ {
+  "n": 104,
+  "name": "الهمزة",
+  "ayahs": 9,
+  "revelation": "مكية"
+ },
+ {
+  "n": 105,
+  "name": "الفيل",
+  "ayahs": 5,
+  "revelation": "مكية"
+ },
+ {
+  "n": 106,
+  "name": "قريش",
+  "ayahs": 4,
+  "revelation": "مكية"
+ },
+ {
+  "n": 107,
+  "name": "الماعون",
+  "ayahs": 7,
+  "revelation": "مكية"
+ },
+ {
+  "n": 108,
+  "name": "الكوثر",
+  "ayahs": 3,
+  "revelation": "مكية"
+ },
+ {
+  "n": 109,
+  "name": "الكافرون",
+  "ayahs": 6,
+  "revelation": "مكية"
+ },
+ {
+  "n": 110,
+  "name": "النصر",
+  "ayahs": 3,
+  "revelation": "مدنية"
+ },
+ {
+  "n": 111,
+  "name": "المسد",
+  "ayahs": 5,
+  "revelation": "مكية"
+ },
+ {
+  "n": 112,
+  "name": "الإخلاص",
+  "ayahs": 4,
+  "revelation": "مكية"
+ },
+ {
+  "n": 113,
+  "name": "الفلق",
+  "ayahs": 5,
+  "revelation": "مكية"
+ },
+ {
+  "n": 114,
+  "name": "الناس",
+  "ayahs": 6,
+  "revelation": "مكية"
+ }
+]
