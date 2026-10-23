@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اختبارات القرآن الكريم — جميع سور القرآن</title>
+<meta name="description" content="تطبيق تفاعلي لاختبار حفظ القرآن الكريم وفهمه: أسئلة موثقة لجميع سور القرآن الكريم الـ114 مقسمة إلى اختبارات منظمة تناسب طول كل سورة.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Reem+Kufi:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=2">
+<link rel="stylesheet" href="css/home.css?v=2">
+</head>
+<body class="home-body">
+<div class="star-pattern"></div>
+<div class="app">
+  <div class="frame">
+    <div class="corner c-tl"><svg viewBox="0 0 46 46"><path d="M2 44 C2 20 20 2 44 2" fill="none" stroke="#c9a34e" stroke-width="3"/><path d="M2 44 C2 26 12 12 26 8" fill="none" stroke="#0d4d4a" stroke-width="2"/></svg></div>
+    <div class="corner c-tr"><svg viewBox="0 0 46 46"><path d="M2 44 C2 20 20 2 44 2" fill="none" stroke="#c9a34e" stroke-width="3"/><path d="M2 44 C2 26 12 12 26 8" fill="none" stroke="#0d4d4a" stroke-width="2"/></svg></div>
+    <div class="corner c-bl"><svg viewBox="0 0 46 46"><path d="M2 44 C2 20 20 2 44 2" fill="none" stroke="#c9a34e" stroke-width="3"/><path d="M2 44 C2 26 12 12 26 8" fill="none" stroke="#0d4d4a" stroke-width="2"/></svg></div>
+    <div class="corner c-br"><svg viewBox="0 0 46 46"><path d="M2 44 C2 20 20 2 44 2" fill="none" stroke="#c9a34e" stroke-width="3"/><path d="M2 44 C2 26 12 12 26 8" fill="none" stroke="#0d4d4a" stroke-width="2"/></svg></div>
+
+    <div class="arch-header">
+      <div class="bismillah">بسم الله الرحمن الرحيم</div>
+      <h1>✦ اختبارات القرآن الكريم ✦</h1>
+      <p class="subtitle">اختبر حفظك وفهمك لآيات القرآن الكريم — أسئلة موثقة لجميع السور، مقسمة إلى اختبارات صغيرة تناسب طول كل سورة، مع مراجعة شاملة ونتائج محفوظة</p>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-box"><div class="num">114</div><div class="lbl">سورة</div></div>
+      <div class="stat-box"><div class="num" id="statQuizzes">—</div><div class="lbl">اختبارًا</div></div>
+      <div class="stat-box"><div class="num" id="statQuestions">—</div><div class="lbl">سؤالاً</div></div>
+      <div class="stat-box"><div class="num" id="statDone">0</div><div class="lbl">اختبارًا مكتملًا</div></div>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <input type="text" id="searchInput" placeholder="ابحث باسم السورة أو رقمها…" autocomplete="off">
+        <span class="search-ico">🔍</span>
+      </div>
+      <div class="chips" id="catChips">
+        <button class="chip active" data-cat="all">الكل</button>
+        <button class="chip" data-cat="طويلة">طويلة</button>
+        <button class="chip" data-cat="متوسطة">متوسطة</button>
+        <button class="chip" data-cat="قصيرة">قصيرة</button>
+      </div>
+      <select class="juz-select" id="juzSelect">
+        <option value="all">كل الأجزاء</option>
+      </select>
+    </div>
+
+    <div class="section-title">◈ مجموعات السور القصيرة والمراجعات الشاملة</div>
+    <div class="groups-grid" id="groupsGrid"></div>
+
+    <div class="section-title">◈ سور القرآن الكريم (بترتيب المصحف)</div>
+    <div class="surah-grid" id="surahGrid"></div>
+    <div class="empty-state" id="emptyState" style="display:none;">لا توجد سور مطابقة لبحثك — جرّب اسمًا آخر أو رقمًا</div>
+
+    <div class="home-footer">
+      <div class="footer-line">✦ تصميم وإعداد: أمير أنور ✦</div>
+      <div class="footer-dua">اللهم اجعل القرآن العظيم ربيع قلوبنا، ونور صدورنا، وجلاء أحزاننا، وذهاب همومنا وغمومنا، وارزقنا حسن تلاوته وتدبره والعمل به يا رب العالمين</div>
+      <div class="src-note">النص القرآني في الأسئلة معتمد على نسخة <a href="https://tanzil.net" target="_blank" rel="noopener">مشروع تنزيل (Tanzil)</a> الموثقة، وقد تحقق منه أداة المراجعة الآلية قبل النشر.</div>
+    </div>
+  </div>
+</div>
+
+<script src="js/surah-registry.js?v=2"></script>
+<script src="js/quiz-registry.js?v=2"></script>
+<script src="js/home.js?v=3"></script>
+</body>
+</html>
