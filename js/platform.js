@@ -385,10 +385,21 @@
       { id: "explorer", title: "مستكشف السور", desc: "التدرّب على 10 سور مختلفة", ok: s.surahs >= 10 }
     ];
     view.replaceChildren(view.querySelector(".qp-section-heading"));
+    var bestScore = 0;
+    attempts.forEach(function (a) { bestScore = Math.max(bestScore, Number(a.score) || 0); });
+    Object.keys(getStore().results).forEach(function (id) {
+      var result = getStore().results[id] || {};
+      bestScore = Math.max(bestScore, Number(result.best) || 0, Number(result.last) || 0);
+    });
     view.appendChild(statGrid([
-      ["اختبارات مكتملة", s.completedQuizzes, "من النتائج المحفوظة"],
-      ["إجابات صحيحة", s.correct, "من المحاولات التفصيلية"],
-      ["الدقة الإجمالية", s.answered ? s.accuracy + "%" : "—", "لا تتوفر نسبة مفصلة قبل تسجيل الإجابات"]
+      ["اختبارات مكتملة", s.completedQuizzes, "اختبارات لها نتيجة محفوظة"],
+      ["إجابات مسجلة", s.answered, "من المحاولات التفصيلية الجديدة"],
+      ["إجابات صحيحة", s.correct, "من الإجابات المسجلة"],
+      ["إجابات غير صحيحة", s.wrong, "من الإجابات المسجلة"],
+      ["الدقة الإجمالية", s.answered ? s.accuracy + "%" : "—", "الصحيحة ÷ الإجابات المسجلة"],
+      ["أفضل نتيجة مسجلة", (bestScore || 0) + "%", "من نتيجة محفوظة فعلًا"],
+      ["سور تم التدرب عليها", s.surahs, "من معرفات السور المحفوظة"],
+      ["جلسات مراجعة مكتملة", attempts.filter(function (a) { return a.type === "review"; }).length, "من سجلات المراجعة التفصيلية"]
     ]));
     var grid = node("div", "qp-achievement-grid");
     earned.forEach(function (b) {
