@@ -154,7 +154,7 @@ function init(){
     rawQuestions = quizData.questions;
     if (isReviewMode) {
       var lastMistakeAttempt = (store.attempts || []).slice().reverse().find(function (attempt) {
-        return attempt && attempt.quizId === QUIZ_ID && (!reviewAttemptId || attempt.id === reviewAttemptId) && attempt.type !== "review" && Array.isArray(attempt.answers) && attempt.answers.some(function (a) { return a && a.correct === false && Number.isInteger(a.sourceIdx); });
+        return attempt && attempt.quizId === QUIZ_ID && (!reviewAttemptId || attempt.id === reviewAttemptId) && (reviewAttemptId || attempt.type !== "review") && Array.isArray(attempt.answers) && attempt.answers.some(function (a) { return a && a.correct === false && Number.isInteger(a.sourceIdx); });
       });
       var missedIds = [];
       if (lastMistakeAttempt) lastMistakeAttempt.answers.forEach(function (a) {
