@@ -196,8 +196,9 @@
     if (!viewLabels[id]) id = "home";
     activeView = id;
     document.querySelectorAll(".qp-view").forEach(function (v) { v.hidden = v.dataset.view !== id; });
+    var primaryView = ({ review: "home", stats: "home", daily: "home", history: "home", plan: "profile", bookmarks: "profile", backup: "profile" })[id] || id;
     document.querySelectorAll("[data-qp-nav]").forEach(function (b) {
-      var active = b.getAttribute("data-qp-nav") === id;
+      var active = b.getAttribute("data-qp-nav") === primaryView;
       b.classList.toggle("active", active);
       if (active) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
     });
@@ -305,7 +306,9 @@
     var continueArea = home.querySelector(".qp-continue");
     if (continueArea) continueArea.remove();
     var store = getStore();
-    var unfinished = Object.keys(store.inprogress).find(function (id) { return store.inprogress[id] && findQuiz(id); });
+    var unfinishedIds = Object.keys(store.inprogress).filter(function (id) { return store.inprogress[id] && findQuiz(id); });
+    unfinishedIds.sort(function (a, b) { return Number((store.inprogress[b] || {}).ts || 0) - Number((store.inprogress[a] || {}).ts || 0); });
+    var unfinished = unfinishedIds[0] || null;
     var cont = node("div", "qp-card qp-continue");
     cont.appendChild(node("h3", "", "متابعة التعلّم"));
     cont.appendChild(node("p", "", unfinished ? "لديك اختبار غير مكتمل: " + (findQuiz(unfinished).title) : "ابدأ اختبارًا من السور المتاحة، أو افتح أحد الاختبارات المحفوظة."));
@@ -473,8 +476,10 @@
     var done = s.attempts.some(function (a) { return a && a.type === "daily" && a.challengeDate === day; });
     var card = node("article", "qp-card qp-daily-card");
     card.append(node("span", "qp-pill", day), node("h3", "", "تحدي اليوم: " + quiz.title), node("p", "", Number(quiz.count) + " سؤالًا من اختبار موجود في بنك الأسئلة. التحدي اختياري ولا توجد عقوبة عند تفويته."));
-    if (done) card.append(node("p", "qp-success", "أكملت تحدي اليوم بالفعل. يمكنك مراجعة نتيجتك في سجل الاختبارات."));
-    else card.appendChild(button("ابدأ التحدي", function () { location.href = quizUrl(quiz.id, "&challenge=" + encodeURIComponent(day)); }, "qp-btn-primary"));
+    if (done) {
+      card.append(node("p", "qp-success", "أكملت تحدي اليوم بالفعل. يمكنك مراجعة نتيجتك في سجل الاختبارات."));
+      card.appendChild(button("عرض النتيجة في السجل", function () { go("history"); }));
+    } else card.appendChild(button("ابدأ التحدي", function () { location.href = quizUrl(quiz.id, "&challenge=" + encodeURIComponent(day)); }, "qp-btn-primary"));
     view.appendChild(card);
   }
 
