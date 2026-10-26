@@ -240,6 +240,7 @@
       releaseFocus(overlay);
       overlay.remove();
       renderPersonalization();
+      try { window.dispatchEvent(new CustomEvent("qq-profile-updated", { detail: { name: name } })); } catch (e) {}
     });
 
     input.addEventListener("input", function () {
