@@ -12,6 +12,10 @@
 
 /* ---------- التخزين المحلي ---------- */
 var STORE_KEY = "qqProgress_v1";
+var PROFILE_KEY = "quranQuizUserName_v1";
+var queryParams = new URLSearchParams(window.location.search);
+var isReviewMode = queryParams.get("review") === "1";
+var challengeDate = queryParams.get("challenge") || "";
 function loadStore(){
   try{
     var raw = localStorage.getItem(STORE_KEY);
@@ -19,10 +23,11 @@ function loadStore(){
     var data = JSON.parse(raw);
     data.results = data.results || {};
     data.inprogress = data.inprogress || {};
+    if (!Array.isArray(data.attempts)) data.attempts = [];
     return data;
   }catch(e){ return {results:{}, inprogress:{}}; }
 }
-function saveStore(){ localStorage.setItem(STORE_KEY, JSON.stringify(store)); }
+function saveStore(){ try { localStorage.setItem(STORE_KEY, JSON.stringify(store)); return true; } catch(e) { console.error("Unable to save quiz progress", e); return false; } }
 var store = loadStore();
 
 /* ---------- عناصر DOM ---------- */
@@ -74,7 +79,7 @@ var letters = ["أ","ب","ج","د"];
 var current = 0, score = 0, selected = null, answered = false;
 var userAnswers = [];
 var helpsRemaining = 3;
-var userName = localStorage.getItem("qq_name") || "";
+var userName = (function(){ try { return localStorage.getItem(PROFILE_KEY) || localStorage.getItem("qq_name") || ""; } catch(e) { return ""; } })();
 var quizMeta = null;
 var quizData = null;
 var isRetake = false;
@@ -204,6 +209,7 @@ function triggerAnimation(){
 
 /* ---------- حفظ التقدم أثناء الاختبار ---------- */
 function saveProgress(){
+  if (isReviewMode) return;
   store.inprogress[QUIZ_ID] = {
     order: questions.map(function(q){ return q.__srcIdx; }),
     answers: userAnswers.map(function(a){
@@ -215,6 +221,7 @@ function saveProgress(){
   saveStore();
 }
 function clearProgress(){
+  if (isReviewMode) return;
   if(store.inprogress[QUIZ_ID]){
     delete store.inprogress[QUIZ_ID];
     saveStore();
@@ -226,7 +233,7 @@ function renderIntro(){
   progressWrap.style.display = "none";
   detachKeyHandler();
 
-  var saved = store.inprogress[QUIZ_ID];
+  var saved = isReviewMode ? null : store.inprogress[QUIZ_ID];
   var resumeBtn = saved
     ? '<button class="btn btn-ghost" onclick="window.__qz.resume()">⏸ متابعة الاختبار السابق (' + saved.current + " من " + TOTAL + ')</button>'
     : "";
@@ -237,8 +244,8 @@ function renderIntro(){
   content.innerHTML = '\
     <div class="intro">\
       <h2>✦ بسم الله نبدأ ✦</h2>\
-      <p>اختبار: <b>' + quizData.title + '</b> — ' + TOTAL + ' سؤالاً</p>\
-      <input type="text" id="nameInput" class="name-input" placeholder="اكتب اسمك هنا" maxlength="30" value="' + userName.replace(/"/g,"&quot;") + '">\
+      <p>' + (isReviewMode ? "مراجعة الأسئلة التي أخطأت فيها" : (challengeDate ? "تحدي اليوم" : "اختبار")) + ' : <b>' + quizData.title + '</b> — ' + TOTAL + ' سؤالاً</p>\
+      ' + (userName ? '<p class="keyboard-hint">الاختبار باسم: <b>' + userName.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;") + '</b></p>' : '<input type="text" id="nameInput" class="name-input" placeholder="اكتب اسمك هنا" maxlength="60">') + '\
       <p class="keyboard-hint">💡 يمكنك استخدام لوحة المفاتيح: أرقام 1-4 أو حروف أ ب ج د للإجابة، و Enter للتأكيد والانتقال</p>\
       ' + bestInfo + '\
       <div class="controls" style="justify-content:center; flex-wrap:wrap; gap:10px;">\
@@ -247,24 +254,27 @@ function renderIntro(){
       </div>\
     </div>';
   var nameInput = document.getElementById("nameInput");
-  nameInput.focus();
-  nameInput.addEventListener("keydown", function(e){
-    if(e.key === "Enter"){ e.preventDefault(); window.__qz.start(); }
-  });
+  if (nameInput) {
+    nameInput.focus();
+    nameInput.addEventListener("keydown", function(e){
+      if(e.key === "Enter"){ e.preventDefault(); window.__qz.start(); }
+    });
+  }
 }
 
 function prepareQuestions(order){
   questions = (order || rawQuestions.map(function(_, i){ return i; })).map(function(i){
     var q = shuffleQuestionOptions(rawQuestions[i]);
-    q.__srcIdx = i;   /* للترتيب المحفوظ عند المتابعة */
+    q.__srcIdx = Number.isInteger(rawQuestions[i].__sourceIdx) ? rawQuestions[i].__sourceIdx : i;   /* للترتيب المحفوظ عند المتابعة */
     return q;
   });
 }
 
 function startQuiz(){
-  var val = document.getElementById("nameInput").value.trim();
+  var nameInput = document.getElementById("nameInput");
+  var val = nameInput ? nameInput.value.trim() : userName;
   userName = val || "الطالب";
-  localStorage.setItem("qq_name", userName);
+  try { localStorage.setItem("qq_name", userName); localStorage.setItem(PROFILE_KEY, userName); } catch(e) { /* quiz can continue if storage is unavailable */ }
   isRetake = false;
   prepareQuestions(null);
   resetState();
@@ -279,7 +289,7 @@ function resetState(){
 }
 
 function resumeQuiz(){
-  var saved = store.inprogress[QUIZ_ID];
+  var saved = isReviewMode ? null : store.inprogress[QUIZ_ID];
   if(!saved){ startQuiz(); return; }
   isRetake = false;
   savedOrder = saved.order;
@@ -424,13 +434,38 @@ function showResult(){
   }
 
   /* حفظ النتيجة (لا تُمحى النتائج السابقة عند إضافة اختبارات جديدة) */
-  var prev = store.results[QUIZ_ID] || {best: 0, attempts: 0};
-  store.results[QUIZ_ID] = {
-    best: Math.max(prev.best, finalScore),
-    last: finalScore,
-    attempts: prev.attempts + 1,
-    ts: Date.now()
-  };
+  var completedAt = Date.now();
+  if (!isReviewMode) {
+    var prev = store.results[QUIZ_ID] || {best: 0, attempts: 0};
+    store.results[QUIZ_ID] = {
+      best: Math.max(prev.best, finalScore),
+      last: finalScore,
+      attempts: prev.attempts + 1,
+      ts: completedAt
+    };
+  }
+  var attemptAnswers = userAnswers.map(function (ans) {
+    var item = questions[ans.idx];
+    return {
+      sourceIdx: item && Number.isInteger(item.__srcIdx) ? item.__srcIdx : ans.idx,
+      question: item ? item.q : "",
+      options: item && Array.isArray(item.options) ? item.options.slice() : [],
+      selectedIndex: ans.chosen,
+      selectedText: item && item.options ? item.options[ans.chosen] : "",
+      correctIndex: item ? item.correct : null,
+      correctAnswer: item && item.options ? item.options[item.correct] : "",
+      correct: !!ans.correct,
+      reference: item ? ayahRef(item) : ""
+    };
+  });
+  if (!Array.isArray(store.attempts)) store.attempts = [];
+  store.attempts.push({
+    id: "attempt-" + completedAt + "-" + Math.random().toString(36).slice(2, 8),
+    quizId: QUIZ_ID, title: quizData.title, surahs: (quizMeta.surahs || []).slice(),
+    ts: completedAt, total: TOTAL, correct: correctCount, wrong: wrongCount, score: finalScore,
+    answers: attemptAnswers, type: isReviewMode ? "review" : (challengeDate ? "daily" : "standard"),
+    challengeDate: challengeDate || null, schemaVersion: 1
+  });
   saveStore();
 
   var reviewHtml = userAnswers.map(function(ans){
