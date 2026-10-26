@@ -36,7 +36,15 @@
   /* ---------- Storage ---------- */
   function readName() {
     try {
-      return (localStorage.getItem(KEY) || "").trim();
+      var saved = (localStorage.getItem(KEY) || "").trim();
+      if (saved) return saved;
+      // Migrate the original quiz-engine name key without touching quiz progress.
+      var legacy = (localStorage.getItem("qq_name") || "").trim();
+      if (legacy) {
+        try { localStorage.setItem(KEY, legacy); } catch (migrationError) {}
+        return legacy;
+      }
+      return "";
     } catch (e) {
       return null;
     }
