@@ -664,7 +664,8 @@
           showMessage(view, "صيغة النسخة غير مدعومة أو ينقصها بيانات أساسية. لم يتم تغيير بياناتك.", "error"); return;
         }
         if (!window.confirm("سيتم استبدال تقدمك الحالي بالبيانات الموجودة في النسخة. سننزّل نسخة من البيانات الحالية أولًا. هل تريد المتابعة؟")) return;
-        downloadText("quran-quiz-before-restore-" + localDateKey() + ".json", JSON.stringify(buildBackup(), null, 2));
+        var backupReady = downloadText("quran-quiz-before-restore-" + localDateKey() + ".json", JSON.stringify(buildBackup(), null, 2));
+        if (!backupReady) { showMessage(view, "تعذر إنشاء نسخة أمان قبل الاستعادة؛ لم يتم تغيير البيانات.", "error"); return; }
         var nextStore = imported.progress;
         if (!Array.isArray(nextStore.attempts)) nextStore.attempts = [];
         var storageKeys = [STORE_KEY, BOOKMARK_KEY, PLAN_KEY, SETTINGS_KEY, PROFILE_KEY, "qq_name"];
@@ -694,14 +695,24 @@
     view.appendChild(heading("إعادة ضبط التقدم", "لن يتم حذف ملفات الأسئلة أو بيانات التطبيقات الأخرى. يمكنك الاحتفاظ باسمك."));
     view.appendChild(button("تصدير ثم إعادة ضبط التقدم", function () {
       if (!window.confirm("سيتم تصدير نسخة احتياطية ثم حذف نتائج الاختبارات وسجل المحاولات والمحفوظات وخطط المراجعة. سيبقى اسمك وملفات الأسئلة كما هي. هل تريد المتابعة؟")) return;
-      downloadText("quran-quiz-before-reset-" + localDateKey() + ".json", JSON.stringify(buildBackup(), null, 2));
+      var backupReady = downloadText("quran-quiz-before-reset-" + localDateKey() + ".json", JSON.stringify(buildBackup(), null, 2));
+      if (!backupReady) { showMessage(view, "تعذر إنشاء نسخة أمان؛ لم يتم حذف أي بيانات.", "error"); return; }
+      var storageKeys = [STORE_KEY, BOOKMARK_KEY, PLAN_KEY];
+      var before = {};
+      try { storageKeys.forEach(function (key) { before[key] = localStorage.getItem(key); }); }
+      catch (e) { showMessage(view, "تعذر الوصول إلى التخزين؛ لم يتم حذف أي بيانات.", "error"); return; }
       var old = getStore();
       old.results = {}; old.inprogress = {}; old.attempts = [];
       try {
         if (!persistStore(old) || !safeWrite(BOOKMARK_KEY, []) || !safeWrite(PLAN_KEY, [])) throw new Error("storage");
         showMessage(view, "تمت إعادة ضبط تقدم التطبيق فقط.", "success");
         window.setTimeout(function () { location.reload(); }, 700);
-      } catch (e) { showMessage(view, "تعذر إكمال إعادة الضبط بسبب مشكلة في التخزين.", "error"); }
+      } catch (e) {
+        storageKeys.forEach(function (key) {
+          try { if (before[key] === null) localStorage.removeItem(key); else localStorage.setItem(key, before[key]); } catch (rollbackError) {}
+        });
+        showMessage(view, "تعذر إكمال إعادة الضبط؛ حاول التطبيق إعادة بياناتك السابقة. احتفظ بنسخة الأمان التي تم تنزيلها.", "error");
+      }
     }, "qp-btn-danger"));
   }
 
