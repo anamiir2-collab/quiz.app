@@ -567,23 +567,39 @@
       reader.onload = function () {
         var imported;
         try { imported = JSON.parse(String(reader.result || "")); } catch (e) { showMessage(view, "الملف ليس JSON صالحًا.", "error"); return; }
-        if (!imported || imported.app !== "quran-quiz" || imported.schemaVersion !== 1 || !imported.progress || typeof imported.progress !== "object" || !imported.progress.results || !imported.progress.inprogress || !Array.isArray(imported.bookmarks) || !Array.isArray(imported.revisionPlans)) {
+        if (!imported || imported.app !== "quran-quiz" || imported.schemaVersion !== 1 ||
+            !imported.progress || typeof imported.progress !== "object" ||
+            !imported.progress.results || typeof imported.progress.results !== "object" || Array.isArray(imported.progress.results) ||
+            !imported.progress.inprogress || typeof imported.progress.inprogress !== "object" || Array.isArray(imported.progress.inprogress) ||
+            (imported.progress.attempts != null && !Array.isArray(imported.progress.attempts)) ||
+            !Array.isArray(imported.bookmarks) || !imported.bookmarks.every(function (b) { return b && (b.type === "quiz" || b.type === "surah") && b.id != null; }) ||
+            !Array.isArray(imported.revisionPlans) || !imported.revisionPlans.every(function (p) { return p && p.id && p.quizId; }) ||
+            (imported.profile != null && typeof imported.profile.displayName !== "string") ||
+            (imported.settings != null && (typeof imported.settings !== "object" || Array.isArray(imported.settings)))) {
           showMessage(view, "صيغة النسخة غير مدعومة أو ينقصها بيانات أساسية. لم يتم تغيير بياناتك.", "error"); return;
         }
         if (!window.confirm("سيتم استبدال تقدمك الحالي بالبيانات الموجودة في النسخة. سننزّل نسخة من البيانات الحالية أولًا. هل تريد المتابعة؟")) return;
         downloadText("quran-quiz-before-restore-" + localDateKey() + ".json", JSON.stringify(buildBackup(), null, 2));
         var nextStore = imported.progress;
-        if (!nextStore.results || !nextStore.inprogress) { showMessage(view, "بيانات التقدم غير صالحة.", "error"); return; }
         if (!Array.isArray(nextStore.attempts)) nextStore.attempts = [];
+        var storageKeys = [STORE_KEY, BOOKMARK_KEY, PLAN_KEY, SETTINGS_KEY, PROFILE_KEY, "qq_name"];
+        var before = {};
+        try { storageKeys.forEach(function (key) { before[key] = localStorage.getItem(key); }); }
+        catch (e) { showMessage(view, "تعذر الوصول إلى التخزين المحلي؛ لم يتم تطبيق النسخة.", "error"); return; }
         try {
           if (!persistStore(nextStore) || !safeWrite(BOOKMARK_KEY, imported.bookmarks) || !safeWrite(PLAN_KEY, imported.revisionPlans) || !safeWrite(SETTINGS_KEY, imported.settings || {})) throw new Error("storage");
-          if (imported.profile && typeof imported.profile.displayName === "string") {
+          if (imported.profile) {
             localStorage.setItem(PROFILE_KEY, imported.profile.displayName);
             localStorage.setItem("qq_name", imported.profile.displayName);
           }
           showMessage(view, "تمت استعادة النسخة. ستُحدّث الواجهة الآن.", "success");
           window.setTimeout(function () { location.reload(); }, 700);
-        } catch (e) { showMessage(view, "تعذرت الاستعادة بالكامل بسبب مشكلة في التخزين. احتفظ بنسخة الأمان التي تم تنزيلها.", "error"); }
+        } catch (e) {
+          storageKeys.forEach(function (key) {
+            try { if (before[key] === null) localStorage.removeItem(key); else localStorage.setItem(key, before[key]); } catch (rollbackError) {}
+          });
+          showMessage(view, "تعذرت الاستعادة؛ حاول التطبيق إعادة بياناتك السابقة. احتفظ بنسخة الأمان التي تم تنزيلها.", "error");
+        }
       };
       reader.onerror = function () { showMessage(view, "تعذر قراءة الملف.", "error"); };
       reader.readAsText(file);
