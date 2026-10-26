@@ -121,6 +121,22 @@ function init(){
       return;
     }
     rawQuestions = quizData.questions;
+    if (isReviewMode) {
+      var lastMistakeAttempt = (store.attempts || []).find(function (attempt) {
+        return attempt && attempt.quizId === QUIZ_ID && attempt.type !== "review" && Array.isArray(attempt.answers) && attempt.answers.some(function (a) { return a && a.correct === false && Number.isInteger(a.sourceIdx); });
+      });
+      var missedIds = [];
+      if (lastMistakeAttempt) lastMistakeAttempt.answers.forEach(function (a) {
+        if (a && a.correct === false && Number.isInteger(a.sourceIdx) && missedIds.indexOf(a.sourceIdx) === -1) missedIds.push(a.sourceIdx);
+      });
+      if (!missedIds.length) {
+        subEl.textContent = "لا توجد أخطاء محفوظة بالتفصيل لهذا الاختبار";
+        content.textContent = "لا توجد أخطاء سابقة محفوظة يمكن مراجعتها لهذا الاختبار. أكمل اختبارًا جديدًا أولًا، ثم ارجع إلى المراجعة الذكية.";
+        var back = document.createElement("a"); back.className = "btn btn-ghost"; back.href = "index.html#review"; back.textContent = "العودة للمراجعة"; content.appendChild(back);
+        return;
+      }
+      rawQuestions = rawQuestions.map(function (q, index) { var copy = Object.assign({}, q); copy.__sourceIdx = index; return copy; }).filter(function (q) { return missedIds.indexOf(q.__sourceIdx) !== -1; });
+    }
     TOTAL = rawQuestions.length;
     POINTS_PER_Q = 100 / TOTAL;
     titleEl.textContent = "✦ " + quizData.title + " ✦";
