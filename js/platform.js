@@ -450,7 +450,7 @@
       card.append(node("h3", "", row.answer.question));
       card.append(node("p", "qp-wrong", "إجابتك: " + (row.answer.selectedText || "غير متاحة")));
       card.append(node("p", "qp-correct", "الإجابة الصحيحة: " + row.answer.correctAnswer));
-      card.appendChild(button("إعادة اختبار السورة / الاختبار", function () { location.href = quizUrl(row.attempt.quizId, "&review=1"); }));
+      card.appendChild(button("إعادة اختبار السورة / الاختبار", function () { location.href = quizUrl(row.attempt.quizId, "&review=1&attempt=" + encodeURIComponent(row.attempt.id)); }));
       view.appendChild(card);
     });
   }
