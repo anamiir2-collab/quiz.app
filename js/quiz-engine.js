@@ -16,18 +16,36 @@ var PROFILE_KEY = "quranQuizUserName_v1";
 var queryParams = new URLSearchParams(window.location.search);
 var isReviewMode = queryParams.get("review") === "1";
 var challengeDate = queryParams.get("challenge") || "";
+var malformedStoreRaw = null;
+function emptyStore(){ return {results:{}, inprogress:{}, attempts:[]}; }
 function loadStore(){
-  try{
-    var raw = localStorage.getItem(STORE_KEY);
-    if(!raw) return {results:{}, inprogress:{}};
+  var raw;
+  try { raw = localStorage.getItem(STORE_KEY); }
+  catch(e) { return emptyStore(); }
+  if (!raw) return emptyStore();
+  try {
     var data = JSON.parse(raw);
-    data.results = data.results || {};
-    data.inprogress = data.inprogress || {};
+    if (!data || typeof data !== "object" || Array.isArray(data)) throw new Error("Invalid progress format");
+    data.results = data.results && typeof data.results === "object" && !Array.isArray(data.results) ? data.results : {};
+    data.inprogress = data.inprogress && typeof data.inprogress === "object" && !Array.isArray(data.inprogress) ? data.inprogress : {};
     if (!Array.isArray(data.attempts)) data.attempts = [];
     return data;
-  }catch(e){ return {results:{}, inprogress:{}}; }
+  } catch(e) {
+    malformedStoreRaw = raw;
+    return emptyStore();
+  }
 }
-function saveStore(){ try { localStorage.setItem(STORE_KEY, JSON.stringify(store)); return true; } catch(e) { console.error("Unable to save quiz progress", e); return false; } }
+function saveStore(){
+  try {
+    if (malformedStoreRaw !== null) localStorage.setItem(STORE_KEY + "_recovery_backup", malformedStoreRaw);
+    localStorage.setItem(STORE_KEY, JSON.stringify(store));
+    malformedStoreRaw = null;
+    return true;
+  } catch(e) {
+    console.error("Unable to save quiz progress", e);
+    return false;
+  }
+}
 var store = loadStore();
 
 /* ---------- عناصر DOM ---------- */
