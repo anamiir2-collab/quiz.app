@@ -625,6 +625,7 @@
       var id = (location.hash || "").replace(/^#/, "");
       setView(viewContainers[id] || viewLabels[id] ? id : "home", false);
     });
+    window.addEventListener("qq-profile-updated", function () { renderView(activeView); });
     window.addEventListener("storage", function (e) {
       if (e.key === STORE_KEY || e.key === PROFILE_KEY || e.key === BOOKMARK_KEY || e.key === PLAN_KEY) renderView(activeView);
     });
