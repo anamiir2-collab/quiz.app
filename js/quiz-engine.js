@@ -26,8 +26,11 @@ function loadStore(){
   try {
     var data = JSON.parse(raw);
     if (!data || typeof data !== "object" || Array.isArray(data)) throw new Error("Invalid progress format");
-    data.results = data.results && typeof data.results === "object" && !Array.isArray(data.results) ? data.results : {};
-    data.inprogress = data.inprogress && typeof data.inprogress === "object" && !Array.isArray(data.inprogress) ? data.inprogress : {};
+    if (data.results != null && (typeof data.results !== "object" || Array.isArray(data.results))) throw new Error("Invalid results format");
+    if (data.inprogress != null && (typeof data.inprogress !== "object" || Array.isArray(data.inprogress))) throw new Error("Invalid in-progress format");
+    if (data.attempts != null && !Array.isArray(data.attempts)) throw new Error("Invalid attempts format");
+    data.results = data.results || {};
+    data.inprogress = data.inprogress || {};
     if (!Array.isArray(data.attempts)) data.attempts = [];
     return data;
   } catch(e) {
