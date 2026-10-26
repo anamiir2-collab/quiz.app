@@ -261,7 +261,7 @@
     viewContainers.plan.appendChild(heading("خطة المراجعة", "أنشئ خطة بسيطة تعتمد على اختبار موجود بالفعل."));
     viewContainers.bookmarks.appendChild(heading("المحفوظات", "احفظ اختبارًا أو سورة للرجوع إليها لاحقًا."));
     viewContainers.backup.appendChild(heading("النسخ الاحتياطي وإدارة البيانات", "احتفظ بنسخة من تقدمك قبل الاستعادة أو إعادة الضبط."));
-    frame.appendChild(node("footer", "qp-footer", "اختبارات القرآن الكريم · تُحفظ بيانات التعلّم محليًا على جهازك."));
+    viewContainers.home.appendChild(node("footer", "qp-footer", "اختبارات القرآن الكريم · تُحفظ بيانات التعلّم محليًا على جهازك."));
     return true;
   }
 
@@ -292,6 +292,43 @@
     if (unfinished) cont.appendChild(button("متابعة الاختبار", function () { location.href = quizUrl(unfinished); }, "qp-btn-primary"));
     else cont.appendChild(button("تصفّح الاختبارات", function () { go("surahs"); }, "qp-btn-primary"));
     home.insertBefore(cont, home.querySelector(".qp-home-actions"));
+    var oldRecent = home.querySelector(".qp-recent-activity");
+    if (oldRecent) oldRecent.remove();
+    var recent = node("div", "qp-recent-activity");
+    recent.appendChild(heading("آخر نشاط", "ملخص من المحاولات المسجلة حديثًا."));
+    var latest = s.attempts.slice(0, 3);
+    if (!latest.length) recent.appendChild(empty("لسه مفيش محاولات مسجلة بالتفصيل. ابدأ اختبارًا جديدًا وسيظهر نشاطك هنا."));
+    latest.forEach(function (a) {
+      var row = node("article", "qp-card qp-recent-row");
+      row.append(node("h3", "", a.title || a.quizId),
+        node("p", "", "النتيجة " + Math.round(Number(a.score) || 0) + "% · " + dateLabel(a.ts)));
+      row.appendChild(button("فتح السجل", function () { go("history"); }));
+      recent.appendChild(row);
+    });
+    var recentSurahs = [];
+    s.attempts.forEach(function (a) {
+      (a.surahs || (findQuiz(a.quizId) || {}).surahs || []).forEach(function (n) {
+        if (recentSurahs.indexOf(n) === -1) recentSurahs.push(n);
+      });
+    });
+    if (recentSurahs.length) {
+      recent.appendChild(heading("سور تدربت عليها مؤخرًا", "اختصارات مبنية على محاولاتك المسجلة."));
+      var chips = node("div", "qp-recent-surahs");
+      recentSurahs.slice(0, 5).forEach(function (n) {
+        var surah = findSurah(n);
+        if (surah) chips.appendChild(button("سورة " + surah.name, function () {
+          go("surahs");
+          var search = document.getElementById("searchInput");
+          if (search) { search.value = surah.name; search.dispatchEvent(new Event("input")); }
+        }));
+      });
+      recent.appendChild(chips);
+    }
+    var toolsHeading = Array.prototype.slice.call(home.querySelectorAll(".qp-section-heading")).find(function (h) {
+      return h.textContent.indexOf("أدوات التعلّم") !== -1;
+    });
+    if (toolsHeading) home.insertBefore(recent, toolsHeading);
+    else home.appendChild(recent);
   }
 
   function renderAchievements() {
