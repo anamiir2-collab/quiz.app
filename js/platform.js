@@ -731,7 +731,7 @@
     var emptyState = document.getElementById("emptyState");
     if (emptyState) {
       emptyState.style.display = visible ? "none" : "block";
-      if (!visible) emptyState.textContent = state === "bookmarked" ? "لا توجد سور محفوظة تطابق هذا الاختيار." : "لا توجد سور تطابق حالة التقدم المحددة.";
+      if (!visible && state !== "all") emptyState.textContent = state === "bookmarked" ? "لا توجد سور محفوظة تطابق هذا الاختيار." : "لا توجد سور تطابق حالة التقدم المحددة.";
     }
   }
 
