@@ -219,7 +219,7 @@
     var surahView = createView("surahs");
     originalNodes.forEach(function (el) { surahView.appendChild(el); });
     var footer = frame.querySelector(".home-footer");
-    if (footer) footer.remove();
+    if (footer) surahView.appendChild(footer);
 
     var views = ["home", "achievements", "profile", "review", "stats", "daily", "history", "plan", "bookmarks", "backup"];
     views.forEach(function (id) { frame.appendChild(createView(id)); });
@@ -358,7 +358,7 @@
       card.append(node("h3", "", row.answer.question));
       card.append(node("p", "qp-wrong", "إجابتك: " + (row.answer.selectedText || "غير متاحة")));
       card.append(node("p", "qp-correct", "الإجابة الصحيحة: " + row.answer.correctAnswer));
-      card.appendChild(button("إعادة اختبار السورة / الاختبار", function () { location.href = quizUrl(row.attempt.quizId); }));
+      card.appendChild(button("إعادة اختبار السورة / الاختبار", function () { location.href = quizUrl(row.attempt.quizId, "&review=1"); }));
       view.appendChild(card);
     });
   }
