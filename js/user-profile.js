@@ -45,7 +45,10 @@
   function writeName(value) {
     try {
       localStorage.setItem(KEY, value);
-      return localStorage.getItem(KEY) === value;
+      if (localStorage.getItem(KEY) !== value) return false;
+      // Keep the quiz engine legacy name in sync for backward compatibility.
+      try { localStorage.setItem("qq_name", value); } catch (legacyError) {}
+      return true;
     } catch (e) {
       return false;
     }
@@ -288,6 +291,12 @@
       header.appendChild(edit);
     }
   }
+
+  /* ---------- Public profile API for the dashboard ---------- */
+  window.QQUserProfile = {
+    getName: function () { return name || readName() || ""; },
+    edit: function () { showNameDialog(true); }
+  };
 
   /* ---------- Init ---------- */
   function init() {
