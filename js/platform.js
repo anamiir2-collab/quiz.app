@@ -314,7 +314,7 @@
       grid.replaceChildren();
       [
         ["اختبارات مكتملة", s.completedQuizzes, "اختبارات لها نتيجة محفوظة"],
-        ["إجابات مسجلة", s.answered, "من المحاولات التفصيلية الجديدة"],
+        ["إجابات مسجلة", s.answered, "كل إجابة في كل محاولة تفصيلية"],
         ["الدقة", s.answered ? s.accuracy + "%" : "—", s.answered ? s.correct + " صحيحة من " + s.answered : "تظهر بعد تسجيل إجابات تفصيلية"],
         ["السور المتدرّب عليها", s.surahs, "من السجلات المتاحة"]
       ].forEach(function (it) { grid.appendChild(statCard(it[0], it[1], it[2])); });
@@ -397,7 +397,7 @@
       ["إجابات صحيحة", s.correct, "من الإجابات المسجلة"],
       ["إجابات غير صحيحة", s.wrong, "من الإجابات المسجلة"],
       ["الدقة الإجمالية", s.answered ? s.accuracy + "%" : "—", "الصحيحة ÷ الإجابات المسجلة"],
-      ["أفضل نتيجة مسجلة", (bestScore || 0) + "%", "من نتيجة محفوظة فعلًا"],
+      ["أفضل نتيجة مسجلة", (attempts.length || Object.keys(getStore().results).length) ? bestScore + "%" : "—", "من نتيجة محفوظة فعلًا"],
       ["سور تم التدرب عليها", s.surahs, "من معرفات السور المحفوظة"],
       ["جلسات مراجعة مكتملة", attempts.filter(function (a) { return a.type === "review"; }).length, "من سجلات المراجعة التفصيلية"]
     ]));
