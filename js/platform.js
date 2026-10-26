@@ -29,14 +29,31 @@
     try { localStorage.setItem(key, JSON.stringify(value)); return true; }
     catch (e) { return false; }
   }
+  var malformedProgressRaw = null;
   function getStore() {
-    var data = safeRead(STORE_KEY, { results: {}, inprogress: {} });
-    if (!data.results || typeof data.results !== "object") data.results = {};
-    if (!data.inprogress || typeof data.inprogress !== "object") data.inprogress = {};
-    if (!Array.isArray(data.attempts)) data.attempts = [];
-    return data;
+    var raw;
+    try { raw = localStorage.getItem(STORE_KEY); } catch (e) { return { results: {}, inprogress: {}, attempts: [] }; }
+    if (!raw) return { results: {}, inprogress: {}, attempts: [] };
+    try {
+      var data = JSON.parse(raw);
+      if (!data || typeof data !== "object" || Array.isArray(data)) throw new Error("Invalid progress format");
+      if (!data.results || typeof data.results !== "object" || Array.isArray(data.results)) data.results = {};
+      if (!data.inprogress || typeof data.inprogress !== "object" || Array.isArray(data.inprogress)) data.inprogress = {};
+      if (!Array.isArray(data.attempts)) data.attempts = [];
+      return data;
+    } catch (e) {
+      malformedProgressRaw = raw;
+      return { results: {}, inprogress: {}, attempts: [] };
+    }
   }
-  function persistStore(data) { return safeWrite(STORE_KEY, data); }
+  function persistStore(data) {
+    try {
+      if (malformedProgressRaw !== null) localStorage.setItem(STORE_KEY + "_recovery_backup", malformedProgressRaw);
+      localStorage.setItem(STORE_KEY, JSON.stringify(data));
+      malformedProgressRaw = null;
+      return true;
+    } catch (e) { return false; }
+  }
   function getName() {
     try { return (localStorage.getItem(PROFILE_KEY) || localStorage.getItem("qq_name") || "").trim(); }
     catch (e) { return ""; }
@@ -579,6 +596,7 @@
     var store = getStore();
     return {
       app: "quran-quiz", schemaVersion: 1, exportedAt: new Date().toISOString(),
+      recoveryRaw: malformedProgressRaw,
       profile: { displayName: getName() }, progress: store,
       bookmarks: bookmarks(), revisionPlans: plans(),
       settings: safeRead(SETTINGS_KEY, {}),
