@@ -85,6 +85,8 @@
 .qp-score-number { color:var(--qp-deep); text-align:end; }
 .qp-performance-row { margin:8px 0; padding:12px 14px; border-radius:10px; background:#fffefa; border:1px solid var(--qp-border); }
 .qp-history-filter { max-width:320px; margin:8px 0 14px; }
+.qp-recent-surahs { display:flex; flex-wrap:wrap; gap:7px; margin:10px 0 18px; }
+.qp-recent-row { margin:8px 0; }
 .qp-pill { display:inline-block; padding:5px 10px; border-radius:999px; background:#f2e9d4; color:#735a2b; font-size:.9rem; }
 .qp-footer { padding:24px 12px 8px; color:var(--qp-muted); font-size:.9rem; text-align:center; line-height:1.8; }
 @keyframes qp-fade { from { opacity:.55; transform:translateY(3px); } to { opacity:1; transform:translateY(0); } }
@@ -94,8 +96,9 @@
   .qp-form { grid-template-columns:1fr; }
 }
 @media (max-width:520px) {
-  .qp-navigation { position:sticky; top:6px; z-index:20; justify-content:space-between; gap:3px; padding:5px; border-radius:14px; }
-  .qp-nav-item { flex:1 1 0; min-width:0; padding:9px 4px; font-size:.78rem; }
+  .qp-navigation { position:fixed; left:50%; bottom:8px; transform:translateX(-50%); z-index:999; width:calc(100vw - 20px); max-width:500px; box-sizing:border-box; justify-content:space-between; gap:3px; padding:5px; border-radius:16px; box-shadow:0 8px 30px rgba(16,71,53,.22); }
+  body.home-body .frame { padding-bottom:88px; }
+  .qp-nav-item { flex:1 1 0; min-width:0; min-height:48px; padding:7px 3px; font-size:.72rem; white-space:normal; }
   .qp-stat-grid { gap:8px; }
   .qp-stat { padding:13px 10px; }
   .qp-shortcuts,.qp-achievement-grid { grid-template-columns:1fr; }
