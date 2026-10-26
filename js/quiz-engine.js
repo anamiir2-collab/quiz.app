@@ -80,6 +80,10 @@ var current = 0, score = 0, selected = null, answered = false;
 var userAnswers = [];
 var helpsRemaining = 3;
 var userName = (function(){ try { return localStorage.getItem(PROFILE_KEY) || localStorage.getItem("qq_name") || ""; } catch(e) { return ""; } })();
+window.addEventListener("qq-profile-updated", function (event) {
+  if (event && event.detail && typeof event.detail.name === "string") userName = event.detail.name;
+  if (document.getElementById("nameInput") && typeof renderIntro === "function") renderIntro();
+});
 var quizMeta = null;
 var quizData = null;
 var isRetake = false;
