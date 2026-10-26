@@ -239,6 +239,18 @@
     ].filter(Boolean);
     var surahView = createView("surahs");
     originalNodes.forEach(function (el) { surahView.appendChild(el); });
+    var toolbar = surahView.querySelector(".toolbar");
+    if (toolbar && !document.getElementById("qp-status-filter")) {
+      var statusLabel = node("label", "qp-status-wrap");
+      statusLabel.appendChild(node("span", "", "حالة التقدم"));
+      var statusSelect = node("select", "qp-filter-select");
+      statusSelect.id = "qp-status-filter";
+      [["all","كل السور"],["not-started","لم تبدأ"],["in-progress","قيد المراجعة"],["completed","مكتملة"],["bookmarked","المحفوظات"]].forEach(function (x) {
+        var opt = node("option", "", x[1]); opt.value = x[0]; statusSelect.appendChild(opt);
+      });
+      statusLabel.appendChild(statusSelect); toolbar.appendChild(statusLabel);
+      statusSelect.addEventListener("change", applyStatusFilter);
+    }
     var footer = frame.querySelector(".home-footer");
     if (footer) surahView.appendChild(footer);
 
@@ -490,10 +502,19 @@
     [["all","كل السجلات"],["daily","تحدي اليوم"],["standard","اختبارات عادية"],["review","المراجعة"]].forEach(function (o) {
       var opt = node("option", "", o[1]); opt.value = o[0]; filter.appendChild(opt);
     });
+    var search = node("input", "qp-history-search"); search.type = "search"; search.placeholder = "ابحث باسم السورة أو الاختبار";
+    var dateFilter = node("input", "qp-history-date"); dateFilter.type = "date"; dateFilter.setAttribute("aria-label", "تصفية السجل حسب التاريخ");
     var list = node("div", "qp-history-list");
     function draw() {
       list.replaceChildren();
-      var detailed = attempts.filter(function (a) { return filter.value === "all" || (filter.value === "standard" ? !a.type || a.type === "standard" : a.type === filter.value); });
+      var query = search.value.trim().toLowerCase();
+      var detailed = attempts.filter(function (a) {
+        var typeMatch = filter.value === "all" || (filter.value === "standard" ? !a.type || a.type === "standard" : a.type === filter.value);
+        var names = (a.surahs || (findQuiz(a.quizId) || {}).surahs || []).map(function (n) { var surah = findSurah(n); return surah ? surah.name : String(n); }).join(" ");
+        var textMatch = !query || String(a.title || "").toLowerCase().indexOf(query) !== -1 || names.toLowerCase().indexOf(query) !== -1;
+        var dateMatch = !dateFilter.value || localDateKey(new Date(Number(a.ts))) === dateFilter.value;
+        return typeMatch && textMatch && dateMatch;
+      });
       detailed.forEach(function (a) {
         var card = node("article", "qp-card qp-history-card");
         card.append(node("h3", "", a.title || a.quizId), node("p", "qp-meta", dateLabel(a.ts)),
@@ -503,8 +524,9 @@
       });
       if (!detailed.length) list.appendChild(empty("لا توجد محاولات تفصيلية مطابقة لهذا الاختيار."));
     }
-    filter.addEventListener("change", draw);
-    view.append(filter, list);
+    filter.addEventListener("change", draw); search.addEventListener("input", draw); dateFilter.addEventListener("change", draw);
+    var historyFilters = node("div", "qp-history-filters"); historyFilters.append(filter, search, dateFilter);
+    view.append(historyFilters, list);
     var legacyIds = Object.keys(s.results || {}).filter(function (id) { return s.results[id] && Number(s.results[id].attempts) > 0; });
     if (legacyIds.length) {
       view.appendChild(heading("نتائج محفوظة من الإصدارات السابقة", "هذه ملخصات موجودة أصلًا، وليست سجلًا لكل محاولة."));
@@ -683,6 +705,36 @@
     }, "qp-btn-danger"));
   }
 
+  function applyStatusFilter() {
+    var filter = document.getElementById("qp-status-filter");
+    var grid = document.getElementById("surahGrid");
+    if (!filter || !grid) return;
+    var state = filter.value, data = getStore(), saved = bookmarks(), visible = 0;
+    Array.prototype.forEach.call(grid.querySelectorAll(".surah-card"), function (card) {
+      var numEl = card.querySelector(".surah-num");
+      var n = numEl ? Number(numEl.textContent.trim()) : NaN;
+      var surah = findSurah(n), quizzes = surah && Array.isArray(surah.quizzes) ? surah.quizzes : [];
+      var done = quizzes.filter(function (q) { return data.results[q.id] && Number(data.results[q.id].attempts) > 0; }).length;
+      var hasProgress = quizzes.some(function (q) { return !!data.inprogress[q.id]; });
+      var isBookmarked = saved.some(function (b) {
+        return (b.type === "surah" && String(b.id) === String(n)) ||
+          (b.type === "quiz" && quizzes.some(function (q) { return q.id === b.id; }));
+      });
+      var matches = state === "all" ||
+        (state === "not-started" && quizzes.length > 0 && done === 0 && !hasProgress) ||
+        (state === "in-progress" && (hasProgress || (done > 0 && done < quizzes.length))) ||
+        (state === "completed" && quizzes.length > 0 && done === quizzes.length) ||
+        (state === "bookmarked" && isBookmarked);
+      card.hidden = !matches;
+      if (matches) visible++;
+    });
+    var emptyState = document.getElementById("emptyState");
+    if (emptyState) {
+      emptyState.style.display = visible ? "none" : "block";
+      if (!visible) emptyState.textContent = state === "bookmarked" ? "لا توجد سور محفوظة تطابق هذا الاختيار." : "لا توجد سور تطابق حالة التقدم المحددة.";
+    }
+  }
+
   function renderView(id) {
     if (id === "home") renderHome();
     if (id === "achievements") renderAchievements();
@@ -700,6 +752,12 @@
     if (!buildShell()) return;
     var hash = (location.hash || "").replace(/^#/, "");
     setView(viewLabels[hash] ? hash : (viewContainers[hash] ? hash : "home"), false);
+    applyStatusFilter();
+    var surahGrid = document.getElementById("surahGrid");
+    if (surahGrid && window.MutationObserver) {
+      var surahObserver = new MutationObserver(function () { applyStatusFilter(); });
+      surahObserver.observe(surahGrid, { childList: true, subtree: true });
+    }
     window.addEventListener("popstate", function () {
       var id = (location.hash || "").replace(/^#/, "");
       setView(viewContainers[id] || viewLabels[id] ? id : "home", false);
