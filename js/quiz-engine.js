@@ -127,7 +127,7 @@ function init(){
     }
     rawQuestions = quizData.questions;
     if (isReviewMode) {
-      var lastMistakeAttempt = (store.attempts || []).find(function (attempt) {
+      var lastMistakeAttempt = (store.attempts || []).slice().reverse().find(function (attempt) {
         return attempt && attempt.quizId === QUIZ_ID && attempt.type !== "review" && Array.isArray(attempt.answers) && attempt.answers.some(function (a) { return a && a.correct === false && Number.isInteger(a.sourceIdx); });
       });
       var missedIds = [];
