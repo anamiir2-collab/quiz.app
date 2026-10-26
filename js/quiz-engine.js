@@ -15,6 +15,7 @@ var STORE_KEY = "qqProgress_v1";
 var PROFILE_KEY = "quranQuizUserName_v1";
 var queryParams = new URLSearchParams(window.location.search);
 var isReviewMode = queryParams.get("review") === "1";
+var reviewAttemptId = queryParams.get("attempt") || "";
 var challengeDate = queryParams.get("challenge") || "";
 var malformedStoreRaw = null;
 function emptyStore(){ return {results:{}, inprogress:{}, attempts:[]}; }
@@ -153,7 +154,7 @@ function init(){
     rawQuestions = quizData.questions;
     if (isReviewMode) {
       var lastMistakeAttempt = (store.attempts || []).slice().reverse().find(function (attempt) {
-        return attempt && attempt.quizId === QUIZ_ID && attempt.type !== "review" && Array.isArray(attempt.answers) && attempt.answers.some(function (a) { return a && a.correct === false && Number.isInteger(a.sourceIdx); });
+        return attempt && attempt.quizId === QUIZ_ID && (!reviewAttemptId || attempt.id === reviewAttemptId) && attempt.type !== "review" && Array.isArray(attempt.answers) && attempt.answers.some(function (a) { return a && a.correct === false && Number.isInteger(a.sourceIdx); });
       });
       var missedIds = [];
       if (lastMistakeAttempt) lastMistakeAttempt.answers.forEach(function (a) {
