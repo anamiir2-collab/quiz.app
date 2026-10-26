@@ -87,19 +87,28 @@
     var s = getStore();
     return Object.keys(s.results).filter(function (id) { return s.results[id] && Number(s.results[id].attempts) > 0; }).length;
   }
+  function completedAttemptCount() {
+    var s = getStore(), attempts = s.attempts || [];
+    var count = attempts.filter(function (a) { return a && a.type !== "review"; }).length;
+    Object.keys(s.results).forEach(function (id) {
+      var legacyCount = Number((s.results[id] || {}).attempts) || 0;
+      var detailedCount = attempts.filter(function (a) { return a && a.quizId === id && a.type !== "review"; }).length;
+      count += Math.max(0, legacyCount - detailedCount);
+    });
+    return count;
+  }
   function summary() {
-    var attempts = allAttempts();
-    var answers = attempts.reduce(function (acc, a) {
-      (a.answers || []).forEach(function (x) {
-        if (x && typeof x.correct === "boolean") { acc.total++; if (x.correct) acc.correct++; }
-      });
-      return acc;
-    }, { total: 0, correct: 0 });
+    var attempts = allAttempts(), store = getStore();
     var surahs = {};
     attempts.forEach(function (a) { (a.surahs || (findQuiz(a.quizId) || {}).surahs || []).forEach(function (n) { surahs[n] = true; }); });
+    Object.keys(store.results).forEach(function (id) {
+      if (!store.results[id] || Number(store.results[id].attempts) < 1) return;
+      var quiz = findQuiz(id);
+      if (quiz && Array.isArray(quiz.surahs)) quiz.surahs.forEach(function (n) { surahs[n] = true; });
+    });
     return {
       attempts: attempts, answers: summarySafeNumber(summaryCount(attempts)),
-      totalAttempts: attempts.length, completedQuizzes: completedQuizCount(),
+      totalAttempts: completedAttemptCount(), completedQuizzes: completedQuizCount(),
       answered: summarySafeNumber(summaryAnswerCount(attempts, "total")),
       correct: summarySafeNumber(summaryAnswerCount(attempts, "correct")),
       wrong: summarySafeNumber(summaryAnswerCount(attempts, "wrong")),
@@ -369,10 +378,10 @@
   function renderAchievements() {
     var view = viewContainers.achievements, s = summary(), attempts = s.attempts;
     var earned = [
-      { id: "first", title: "أول اختبار", desc: "إكمال اختبار واحد", ok: attempts.some(function (a) { return a.type !== "review"; }) },
-      { id: "five", title: "خطوات ثابتة", desc: "إكمال خمسة اختبارات", ok: attempts.filter(function (a) { return a.type !== "review"; }).length >= 5 },
+      { id: "first", title: "أول اختبار", desc: "إكمال اختبار واحد", ok: s.totalAttempts >= 1 },
+      { id: "five", title: "خطوات ثابتة", desc: "إكمال خمسة اختبارات", ok: s.totalAttempts >= 5 },
       { id: "review", title: "بداية المراجعة", desc: "إكمال جلسة مراجعة مسجلة", ok: attempts.some(function (a) { return a.type === "review"; }) },
-      { id: "accuracy", title: "دقة مميزة", desc: "تحقيق 90% على الأقل في محاولة مكتملة", ok: attempts.some(function (a) { return Number(a.score) >= 90 && a.type !== "review"; }) },
+      { id: "accuracy", title: "دقة مميزة", desc: "تحقيق 90% على الأقل في محاولة مكتملة", ok: attempts.some(function (a) { return Number(a.score) >= 90 && a.type !== "review"; }) || Object.keys(getStore().results).some(function (id) { var r = getStore().results[id] || {}; return Math.max(Number(r.best) || 0, Number(r.last) || 0) >= 90; }) },
       { id: "explorer", title: "مستكشف السور", desc: "التدرّب على 10 سور مختلفة", ok: s.surahs >= 10 }
     ];
     view.replaceChildren(view.querySelector(".qp-section-heading"));
