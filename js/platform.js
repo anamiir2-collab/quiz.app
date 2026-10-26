@@ -565,29 +565,55 @@
     var view = viewContainers.plan, current = plans(), attempts = allAttempts();
     view.replaceChildren(view.querySelector(".qp-section-heading"));
     var form = node("form", "qp-form");
-    var quizSelect = selectControl("اختبار المراجعة", QUIZ_LIST.map(function (q) { return { value: q.id, label: q.title + " (" + q.count + " سؤالًا)" }; }), "quizId");
+    var surahSelect = selectControl("السورة المستهدفة", [{value:"all",label:"كل السور"}].concat(SURAH_LIST.map(function (s) { return { value:String(s.n), label:"سورة " + s.name }; })), "surahId");
+    var quizSelect = selectControl("اختبار مناسب", [], "quizId");
     var goalSelect = selectControl("عدد الجلسات المستهدف أسبوعيًا", [1,2,3,4,5,6,7].map(function (n) { return { value: String(n), label: String(n) }; }), "weeklyGoal");
     var questionsSelect = selectControl("هدف الأسئلة لكل جلسة", [5,10,15,20,25].map(function (n) { return { value: String(n), label: String(n) + " سؤالًا (هدف إرشادي)" }; }), "targetQuestions");
-    form.append(quizSelect.label, goalSelect.label, questionsSelect.label, button("حفظ الخطة", function () {
+    function updateQuizOptions() {
+      var selectedSurah = surahSelect.input.value;
+      var candidates = QUIZ_LIST.filter(function (q) {
+        return selectedSurah === "all" || (q.surahs || []).indexOf(Number(selectedSurah)) !== -1;
+      });
+      quizSelect.input.replaceChildren();
+      if (!candidates.length) {
+        var emptyOption = node("option", "", "لا يوجد اختبار مناسب لهذه السورة");
+        emptyOption.value = ""; quizSelect.input.appendChild(emptyOption); return;
+      }
+      candidates.forEach(function (q) {
+        var opt = node("option", "", q.title + " (" + q.count + " سؤالًا)");
+        opt.value = q.id; quizSelect.input.appendChild(opt);
+      });
+    }
+    surahSelect.input.addEventListener("change", updateQuizOptions);
+    updateQuizOptions();
+    form.append(surahSelect.label, quizSelect.label, goalSelect.label, questionsSelect.label, button("حفظ الخطة", function () {
       var q = findQuiz(quizSelect.input.value);
-      if (!q) { showMessage(view, "اختَر اختبارًا صالحًا.", "error"); return; }
-      var p = current.find(function (x) { return x.quizId === q.id; });
+      if (!q) { showMessage(view, "لا يوجد اختبار صالح للاختيار الحالي.", "error"); return; }
+      var selectedSurah = surahSelect.input.value === "all" ? null : Number(surahSelect.input.value);
+      var p = current.find(function (x) { return x.quizId === q.id && String(x.surahId || "all") === String(selectedSurah || "all"); });
       if (p) {
         p.weeklyGoal = Number(goalSelect.input.value); p.targetQuestions = Number(questionsSelect.input.value); p.updatedAt = Date.now();
       } else {
-        current.unshift({ id: "plan-" + Date.now(), quizId: q.id, title: q.title, weeklyGoal: Number(goalSelect.input.value), targetQuestions: Number(questionsSelect.input.value), createdAt: Date.now(), updatedAt: Date.now() });
+        var surah = selectedSurah ? findSurah(selectedSurah) : null;
+        current.unshift({ id: "plan-" + Date.now(), quizId: q.id, surahId: selectedSurah, title: q.title, surahTitle: surah ? "سورة " + surah.name : "", weeklyGoal: Number(goalSelect.input.value), targetQuestions: Number(questionsSelect.input.value), createdAt: Date.now(), updatedAt: Date.now() });
       }
       if (!safeWrite(PLAN_KEY, current)) showMessage(view, "تعذر حفظ الخطة. تحقق من مساحة التخزين المتاحة.", "error");
       else renderView("plan");
     }, "qp-btn-primary"));
     form.addEventListener("submit", function (e) { e.preventDefault(); });
     view.appendChild(form);
-    if (!current.length) { view.appendChild(empty("لم تنشئ خطة بعد. اختر اختبارًا وحدد هدفك الأسبوعي.")); return; }
+    if (!current.length) { view.appendChild(empty("لم تنشئ خطة بعد. اختر سورة أو اختبارًا وحدد هدفك الأسبوعي.")); return; }
     current.forEach(function (p) {
       var sessions = attempts.filter(function (a) { return a.quizId === p.quizId && Number(a.ts) >= Number(p.createdAt || 0) && (!a.type || a.type === "standard"); }).length;
+      var weekStart = new Date(); weekStart.setHours(0,0,0,0);
+      weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+      var thisWeek = attempts.filter(function (a) { return a.quizId === p.quizId && Number(a.ts) >= Math.max(Number(p.createdAt || 0), weekStart.getTime()) && (!a.type || a.type === "standard"); }).length;
+      var remaining = Math.max(0, Number(p.weeklyGoal || 0) - thisWeek);
       var card = node("article", "qp-card qp-plan-card");
-      card.append(node("h3", "", p.title), node("p", "", "الهدف الأسبوعي: " + p.weeklyGoal + " جلسات · هدف الأسئلة: " + p.targetQuestions + " (إرشادي)"),
-        node("p", "qp-success", "جلسات مكتملة منذ إنشاء الخطة: " + sessions));
+      card.append(node("h3", "", (p.surahTitle ? p.surahTitle + " · " : "") + p.title),
+        node("p", "", "الهدف الأسبوعي: " + p.weeklyGoal + " جلسات · هدف الأسئلة: " + p.targetQuestions + " (إرشادي)"),
+        node("p", "qp-success", "جلسات مكتملة منذ إنشاء الخطة: " + sessions),
+        node("p", "", "هذا الأسبوع: " + thisWeek + " من " + p.weeklyGoal + " · المتبقي: " + remaining));
       card.appendChild(button("ابدأ المراجعة", function () { location.href = quizUrl(p.quizId); }, "qp-btn-primary"));
       card.appendChild(button("حذف الخطة", function () {
         if (!window.confirm("هل تريد حذف هذه الخطة؟ لن تُحذف نتائج الاختبارات.")) return;
